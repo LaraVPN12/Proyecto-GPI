@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatelessWidget {
+class EmailFormField extends StatelessWidget {
   final String placeholder;
   double padding;
   bool hidetext;
-  CustomTextField({
+  EmailFormField({
     required this.placeholder,
     this.padding = 0.0,
     this.hidetext = false,
@@ -23,6 +23,15 @@ class CustomTextField extends StatelessWidget {
           labelText: placeholder,
         ),
         obscureText: hidetext,
+        validator: (value) {
+          if (value!.isEmpty ||
+              !RegExp(r'^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$')
+                  .hasMatch(value)) {
+            return "Enter a valid email";
+          } else {
+            return "Que esta pasando";
+          }
+        },
       ),
     );
   }
