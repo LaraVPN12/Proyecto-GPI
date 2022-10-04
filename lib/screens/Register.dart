@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
-import 'package:proyecto_visitas/components/CustomButtom.dart';
-import 'package:proyecto_visitas/components/CustomTextField.dart';
-import '../components/RegisterItem.dart';
+import 'package:proyecto_visitas/helpers/TextFieldController.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -12,6 +10,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  TextFieldController controller = TextFieldController();
   List<String> rolItems = [];
   List<String> areaItems = [];
   String? value;
@@ -37,67 +36,151 @@ class _RegisterState extends State<Register> {
   @override
   void initState() {
     super.initState();
-    getRol();
+    //getRol();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.teal[50],
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: SafeArea(
           child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 25,
-                ),
-                const Text(
-                  'Regístrate',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+            child: Form(
+              key: controller.formkey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 25,
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                //Name
-                RegisterItem(
-                  itemName: 'Nombre',
-                  textField: CustomTextField(
-                    placeholder: 'Nombre',
+                  const Text(
+                    'Regístrate',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                //Email
-                RegisterItem(
-                  itemName: 'Email',
-                  textField: CustomTextField(
-                    placeholder: 'Email',
+                  const SizedBox(
+                    height: 10,
                   ),
-                ),
-                RegisterItem(
-                  itemName: 'Usuario',
-                  textField: CustomTextField(
-                    placeholder: 'Nombre de Usuario',
+                  //Name
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    child: TextFormField(
+                      keyboardType: TextInputType.text,
+                      controller: controller.nameController,
+                      onSaved: (value) {
+                        controller.name = value!;
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                        ),
+                        labelText: 'Nombre',
+                      ),
+                      obscureText: false,
+                      validator: (value) {
+                        return controller.validateName(value!);
+                      },
+                    ),
                   ),
-                ),
-                RegisterItem(
-                  itemName: 'Contraseña',
-                  textField: CustomTextField(
-                    placeholder: 'Contraseña',
-                    hidetext: true,
+                  const SizedBox(
+                    height: 25,
                   ),
-                ),
-                DropDownRegisterItem('Cargo', rolItems),
-                const SizedBox(
-                  height: 10,
-                ),
-                const CustomButtom(
-                  text: 'Hecho',
-                ),
-              ],
+                  //Email
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    child: TextFormField(
+                      keyboardType: TextInputType.emailAddress,
+                      controller: controller.emailController,
+                      onSaved: (value) {
+                        controller.email = value!;
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                        ),
+                        labelText: 'Email',
+                      ),
+                      obscureText: false,
+                      validator: (value) {
+                        return controller.validateEmail(value!);
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    child: TextFormField(
+                      keyboardType: TextInputType.text,
+                      controller: controller.passwordController,
+                      onSaved: (value) {
+                        controller.password = value!;
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                        ),
+                        labelText: 'Password',
+                      ),
+                      obscureText: true,
+                      validator: (value) {
+                        return controller.validatePassword(value!);
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  DropDownRegisterItem('Cargo', rolItems),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  GestureDetector(
+                    onTap: (() {
+                      controller.checkLogin();
+                    }),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 25.0,
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          color: Colors.teal[400],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Crear Cuenta',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

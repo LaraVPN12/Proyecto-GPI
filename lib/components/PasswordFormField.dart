@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatelessWidget {
+class PasswordFormField extends StatelessWidget {
   final String placeholder;
   double padding;
   bool hidetext;
-  CustomTextField({
+  PasswordFormField({
     required this.placeholder,
     this.padding = 0.0,
     this.hidetext = false,
@@ -23,6 +23,15 @@ class CustomTextField extends StatelessWidget {
           labelText: placeholder,
         ),
         obscureText: hidetext,
+        validator: (value) {
+          if (value!.isEmpty ||
+              !RegExp(r'(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}')
+                  .hasMatch(value!)) {
+            return "Enter a valid password";
+          } else {
+            return null;
+          }
+        },
       ),
     );
   }
