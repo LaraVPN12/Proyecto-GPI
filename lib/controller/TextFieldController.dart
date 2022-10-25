@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:postgres/postgres.dart';
+import 'package:proyecto_visitas/controller/data_controller.dart';
+import 'package:proyecto_visitas/screens/User.dart';
 
 class TextFieldController extends GetxController {
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
@@ -59,11 +63,18 @@ class TextFieldController extends GetxController {
     return null;
   }
 
-  void checkLogin() {
+  void route(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => UserPage(),
+    ));
+  }
+
+  bool checkLogin(BuildContext context) {
     final isValid = formkey.currentState!.validate();
     if (!isValid) {
-      return;
+      return false;
     }
     formkey.currentState!.save();
+    return true;
   }
 }

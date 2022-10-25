@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
-import 'package:proyecto_visitas/helpers/TextFieldController.dart';
+import 'package:proyecto_visitas/controller/TextFieldController.dart';
+
+import '../controller/data_controller.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -10,6 +12,8 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  DataController dataController = DataController();
+  late String name, lastName;
   TextFieldController controller = TextFieldController();
   List<String> rolItems = [];
   List<String> areaItems = [];
@@ -24,19 +28,19 @@ class _RegisterState extends State<Register> {
       password: 'GPIProj3ct.',
     );
     await connection.open();
-    var results = await connection.query('''SELECT * FROM rol''');
+    var results =
+        await connection.query('''SELECT * FROM rol WHERE id_rol > 2''');
     for (var row in results) {
       setState(() {
         rolItems.add(row[1]);
       });
     }
-    await connection.close();
   }
 
   @override
   void initState() {
     super.initState();
-    //getRol();
+    getRol();
   }
 
   @override
@@ -86,7 +90,8 @@ class _RegisterState extends State<Register> {
                       ),
                       obscureText: false,
                       validator: (value) {
-                        return controller.validateName(value!);
+                        name = value!;
+                        return controller.validateName(value);
                       },
                     ),
                   ),
@@ -154,7 +159,9 @@ class _RegisterState extends State<Register> {
                   ),
                   GestureDetector(
                     onTap: (() {
-                      controller.checkLogin();
+                      if (controller.checkLogin(context)) {
+                        dataController.user_exist(name, 'lara', context);
+                      }
                     }),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -163,7 +170,7 @@ class _RegisterState extends State<Register> {
                       child: Container(
                         padding: const EdgeInsets.all(15),
                         decoration: BoxDecoration(
-                          color: Colors.teal[400],
+                          color: Colors.greenAccent[400],
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: const Center(

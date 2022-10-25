@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_visitas/components/EmailFormField.dart';
-import 'package:proyecto_visitas/helpers/TextFieldController.dart';
+import 'package:proyecto_visitas/controller/TextFieldController.dart';
 import 'package:proyecto_visitas/screens/Register.dart';
 import '../components/CustomButtom.dart';
 import '../components/CustomTextField.dart';
@@ -94,7 +94,7 @@ class _LoginState extends State<Login> {
                 ),
                 GestureDetector(
                   onTap: (() {
-                    controller.checkLogin();
+                    controller.checkLogin(context);
                   }),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -103,7 +103,7 @@ class _LoginState extends State<Login> {
                     child: Container(
                       padding: const EdgeInsets.all(15),
                       decoration: BoxDecoration(
-                        color: Colors.teal[400],
+                        color: Colors.greenAccent[400],
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Center(
@@ -141,7 +141,7 @@ class _LoginState extends State<Login> {
                         'Crea una ahora',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue,
+                          color: Colors.greenAccent[400],
                         ),
                       ),
                     ),
