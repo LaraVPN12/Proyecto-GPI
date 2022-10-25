@@ -160,7 +160,7 @@ class _RegisterState extends State<Register> {
                   GestureDetector(
                     onTap: (() {
                       if (controller.checkLogin(context)) {
-                        dataController.user_exist(name, 'lara', context);
+                        dataController.user_exist(name, 'Lara', context);
                       }
                     }),
                     child: Padding(

@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:postgres/postgres.dart';
 import 'package:proyecto_visitas/services/DBConnection.dart';
 
 class DataController {
-  DBConnection db = DBConnection();
+  // ignore: non_constant_identifier_names
   Future user_exist(
       String nombre, String apellido, BuildContext context) async {
-    await db.connection.open();
-    var results = await db.connection.query(
-        "SELECT * FROM tecnico WHERE (datos_personales).primer_nombre = '$nombre'");
+    final connection = PostgreSQLConnection(
+      'proyecto-visitas.cssse3lhtwmj.us-east-2.rds.amazonaws.com',
+      5432,
+      'proyecto_gpi',
+      username: 'kevin_eli',
+      password: 'GPIProj3ct.',
+    );
+    await connection.open();
+    var results = await connection.query(
+        '''SELECT * FROM tecnico WHERE (datos_personales).primer_nombre = '$nombre' AND (datos_personales).primer_apellido = '$apellido' ''');
     if (results.isEmpty) {
-      openDialog(context, 'ERROR', 'Los datos no fueron encontrados');
+      openDialog(context, 'ERROR', 'Los no ' + nombre + ' ' + apellido);
     } else {
-      print("Well Done");
-      //await db.connection.close();
+      openDialog(context, 'BIEN', 'Los datos fueron encontrados');
     }
   }
 
