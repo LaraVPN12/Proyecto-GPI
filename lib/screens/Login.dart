@@ -4,6 +4,7 @@ import 'package:proyecto_visitas/controller/TextFieldController.dart';
 import 'package:proyecto_visitas/screens/Register.dart';
 import '../components/CustomButtom.dart';
 import '../components/CustomTextField.dart';
+import '../controller/data_controller.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -13,7 +14,9 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  DataController dataController = DataController();
   TextFieldController controller = TextFieldController();
+  late String email, password;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +61,8 @@ class _LoginState extends State<Login> {
                     ),
                     obscureText: false,
                     validator: (value) {
-                      return controller.validateEmail(value!);
+                      email = value!;
+                      return controller.validateEmail(value);
                     },
                   ),
                 ),
@@ -85,7 +89,8 @@ class _LoginState extends State<Login> {
                     ),
                     obscureText: true,
                     validator: (value) {
-                      return controller.validatePassword(value!);
+                      password = value!;
+                      return controller.validatePassword(value);
                     },
                   ),
                 ),
@@ -94,7 +99,9 @@ class _LoginState extends State<Login> {
                 ),
                 GestureDetector(
                   onTap: (() {
-                    controller.checkLogin(context);
+                    if (controller.checkLogin(context)) {
+                      dataController.login(context, email, password);
+                    }
                   }),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(

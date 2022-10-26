@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_visitas/screens/AddMember.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({super.key});
@@ -19,15 +20,7 @@ class _AdminPageState extends State<AdminPage> {
         ),
       ),
     ),
-    const Center(
-      child: Text(
-        'Historial',
-        style: TextStyle(
-          fontSize: 50,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    )
+    const AddMember(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -35,7 +28,7 @@ class _AdminPageState extends State<AdminPage> {
       body: screens[index],
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
-          indicatorColor: Colors.green.shade100,
+          indicatorColor: Colors.greenAccent.shade100,
           labelTextStyle: MaterialStateProperty.all(
             const TextStyle(
               fontSize: 14,
@@ -45,7 +38,7 @@ class _AdminPageState extends State<AdminPage> {
         ),
         child: NavigationBar(
           height: 60,
-          backgroundColor: Colors.green.shade300,
+          backgroundColor: Colors.greenAccent.shade200,
           selectedIndex: index,
           onDestinationSelected: (index) => setState(() => this.index = index),
           destinations: const [
