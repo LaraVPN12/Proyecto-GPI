@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
 import 'package:proyecto_visitas/controller/TextFieldController.dart';
+import 'package:proyecto_visitas/screens/User.dart';
 
 import '../controller/data_controller.dart';
 
@@ -13,7 +14,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   DataController dataController = DataController();
-  late String name, lastName;
+  late String name, lastName, email;
   TextFieldController controller = TextFieldController();
   List<String> rolItems = [];
   List<String> areaItems = [];
@@ -98,6 +99,35 @@ class _RegisterState extends State<Register> {
                   const SizedBox(
                     height: 25,
                   ),
+                  //Last Name
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    child: TextFormField(
+                      keyboardType: TextInputType.text,
+                      controller: controller.nameController,
+                      onSaved: (value) {
+                        controller.name = value!;
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                        ),
+                        labelText: 'Apellido',
+                      ),
+                      obscureText: false,
+                      validator: (value) {
+                        lastName = value!;
+                        return controller.validateLastName(value);
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
                   //Email
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -119,7 +149,8 @@ class _RegisterState extends State<Register> {
                       ),
                       obscureText: false,
                       validator: (value) {
-                        return controller.validateEmail(value!);
+                        email = value!;
+                        return controller.validateEmail(value);
                       },
                     ),
                   ),
@@ -158,9 +189,19 @@ class _RegisterState extends State<Register> {
                     height: 10,
                   ),
                   GestureDetector(
-                    onTap: (() {
+                    onTap: (() async {
                       if (controller.checkLogin(context)) {
-                        dataController.user_exist(name, 'Lara', context);
+                        dataController.tecnico_exist(
+                            name, lastName, email, context);
+                        var res =
+                            await dataController.user_exist(email, context);
+                        if (res) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const UserPage(),
+                            ),
+                          );
+                        }
                       }
                     }),
                     child: Padding(

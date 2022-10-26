@@ -63,6 +63,17 @@ class TextFieldController extends GetxController {
     return null;
   }
 
+  String? validateLastName(String value) {
+    if (value.isEmpty) {
+      return "* Required";
+    } else if (!RegExp(r'^[A-Z].*').hasMatch(value)) {
+      return "Debe Contener Inicial Mayúscula";
+    } else if (GetUtils.isLengthLessThan(value, 3)) {
+      return "Debe contener al menos 3 dígitos";
+    }
+    return null;
+  }
+
   void route(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => UserPage(),

@@ -5,8 +5,8 @@ import 'package:proyecto_visitas/services/DBConnection.dart';
 
 class DataController {
   // ignore: non_constant_identifier_names
-  Future user_exist(
-      String nombre, String apellido, BuildContext context) async {
+  Future tecnico_exist(String nombre, String apellido, String email,
+      BuildContext context) async {
     final connection = PostgreSQLConnection(
       'proyecto-visitas.cssse3lhtwmj.us-east-2.rds.amazonaws.com',
       5432,
@@ -18,9 +18,28 @@ class DataController {
     var results = await connection.query(
         '''SELECT * FROM tecnico WHERE (datos_personales).primer_nombre = '$nombre' AND (datos_personales).primer_apellido = '$apellido' ''');
     if (results.isEmpty) {
-      openDialog(context, 'ERROR', 'Los no ' + nombre + ' ' + apellido);
+      openDialog(context, 'ERROR',
+          'Los datos del usuario ingresados no se encontraron');
+    }
+  }
+
+  Future<bool> user_exist(String email, BuildContext context) async {
+    final connection = PostgreSQLConnection(
+      'proyecto-visitas.cssse3lhtwmj.us-east-2.rds.amazonaws.com',
+      5432,
+      'proyecto_gpi',
+      username: 'kevin_eli',
+      password: 'GPIProj3ct.',
+    );
+    await connection.open();
+    var results = await connection
+        .query('''SELECT * FROM usuario WHERE correo = '$email' ''');
+    if (results.isEmpty) {
+      return Future<bool>.value(true);
     } else {
-      openDialog(context, 'BIEN', 'Los datos fueron encontrados');
+      openDialog(context, 'ERROR',
+          'Ya existe un usuario registrado con el correo ingresado');
+      return false;
     }
   }
 
@@ -38,11 +57,20 @@ class DataController {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(titulo),
+                Text(
+                  titulo,
+                  style: TextStyle(
+                    color: Colors.red[400],
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(
                   height: 10,
                 ),
-                Text(contenido),
+                Text(
+                  contenido,
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(
                   height: 10,
                 ),
