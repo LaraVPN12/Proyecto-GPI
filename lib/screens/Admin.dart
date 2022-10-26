@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class UserPage extends StatefulWidget {
-  const UserPage({super.key});
+class AdminPage extends StatefulWidget {
+  const AdminPage({super.key});
 
   @override
-  State<UserPage> createState() => _UserPageState();
+  State<AdminPage> createState() => _AdminPageState();
 }
 
-class _UserPageState extends State<UserPage> {
+class _AdminPageState extends State<AdminPage> {
   int index = 0;
   final screens = [
     const Center(
@@ -55,8 +55,9 @@ class _UserPageState extends State<UserPage> {
               label: 'Home',
             ),
             NavigationDestination(
-              icon: Icon(Icons.history),
-              label: 'Historial de Visitas',
+              selectedIcon: Icon(Icons.account_circle),
+              icon: Icon(Icons.account_circle_outlined),
+              label: 'Agregar Miembro',
             ),
           ],
         ),

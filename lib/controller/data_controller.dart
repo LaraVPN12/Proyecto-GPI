@@ -43,6 +43,31 @@ class DataController {
     }
   }
 
+  Future addUser() async {
+    final connection = PostgreSQLConnection(
+      'proyecto-visitas.cssse3lhtwmj.us-east-2.rds.amazonaws.com',
+      5432,
+      'proyecto_gpi',
+      username: 'kevin_eli',
+      password: 'GPIProj3ct.',
+    );
+    await connection.open();
+    var results = await connection.query(''' INSERT INTO  ''');
+  }
+
+  Future getUserInfo(String email, String password) async {
+    final connection = PostgreSQLConnection(
+      'proyecto-visitas.cssse3lhtwmj.us-east-2.rds.amazonaws.com',
+      5432,
+      'proyecto_gpi',
+      username: 'kevin_eli',
+      password: 'GPIProj3ct.',
+    );
+    await connection.open();
+    var results = await connection.query(
+        '''' SELECT * FROM usuario WHERE correo = '$email' AND password_usuario = '$password' ''');
+  }
+
   Future openDialog(BuildContext context, String titulo, String contenido) =>
       showDialog(
         context: context,
