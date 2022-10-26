@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_visitas/screens/Admin.dart';
 import 'package:proyecto_visitas/screens/Login.dart';
+import 'package:proyecto_visitas/screens/User.dart';
 
 void main() => {runApp(const MyApp())};
 

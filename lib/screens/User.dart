@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_visitas/screens/AddRegister.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});
@@ -10,15 +11,7 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
   int index = 0;
   final screens = [
-    const Center(
-      child: Text(
-        'Home',
-        style: TextStyle(
-          fontSize: 50,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ),
+    const AddRegister(),
     const Center(
       child: Text(
         'Historial',
@@ -35,7 +28,7 @@ class _UserPageState extends State<UserPage> {
       body: screens[index],
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
-          indicatorColor: Colors.green.shade100,
+          indicatorColor: Colors.greenAccent.shade100,
           labelTextStyle: MaterialStateProperty.all(
             const TextStyle(
               fontSize: 14,
@@ -45,7 +38,7 @@ class _UserPageState extends State<UserPage> {
         ),
         child: NavigationBar(
           height: 60,
-          backgroundColor: Colors.green.shade300,
+          backgroundColor: Colors.greenAccent.shade200,
           selectedIndex: index,
           onDestinationSelected: (index) => setState(() => this.index = index),
           destinations: const [
