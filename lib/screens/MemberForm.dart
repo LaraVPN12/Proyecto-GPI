@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:postgres/postgres.dart';
+import '../components/AreaItem.dart';
+import '../components/SelectedItem.dart';
 import '../controller/TextFieldController.dart';
+import '../model/Area.dart';
 
 class MemberForm extends StatefulWidget {
   const MemberForm({super.key});
@@ -9,9 +13,31 @@ class MemberForm extends StatefulWidget {
 }
 
 class _MemberFormState extends State<MemberForm> {
+  List<Area> areaItems = [];
+  List<Area> itemsSelected = [];
+
+  Future getAreas() async {
+    final connection = PostgreSQLConnection(
+      'proyecto-visitas.cssse3lhtwmj.us-east-2.rds.amazonaws.com',
+      5432,
+      'proyecto_gpi',
+      username: 'kevin_eli',
+      password: 'GPIProj3ct.',
+    );
+    await connection.open();
+    var results = await connection
+        .query(''' SELECT nombre_area_educativa FROM area_educativa''');
+    for (var row in results) {
+      setState(() {
+        areaItems.add(Area(row[0]));
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    getAreas();
   }
 
   TextFieldController controller = TextFieldController();
@@ -58,7 +84,7 @@ class _MemberFormState extends State<MemberForm> {
                             Radius.circular(10.0),
                           ),
                         ),
-                        labelText: 'Nombre',
+                        labelText: 'Primer Nombre',
                       ),
                       obscureText: false,
                       validator: (value) {
@@ -86,7 +112,7 @@ class _MemberFormState extends State<MemberForm> {
                             Radius.circular(10.0),
                           ),
                         ),
-                        labelText: 'Nombre',
+                        labelText: 'Segundo Nombre',
                       ),
                       obscureText: false,
                       validator: (value) {
@@ -114,7 +140,7 @@ class _MemberFormState extends State<MemberForm> {
                             Radius.circular(10.0),
                           ),
                         ),
-                        labelText: 'Apellido',
+                        labelText: 'Primer Apellido',
                       ),
                       obscureText: false,
                       validator: (value) {
@@ -125,7 +151,7 @@ class _MemberFormState extends State<MemberForm> {
                   const SizedBox(
                     height: 25,
                   ),
-                  //Primer Apellido
+                  //Segundo Apellido
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25),
                     child: TextFormField(
@@ -142,7 +168,7 @@ class _MemberFormState extends State<MemberForm> {
                             Radius.circular(10.0),
                           ),
                         ),
-                        labelText: 'Apellido',
+                        labelText: 'Segundo Apellido',
                       ),
                       obscureText: false,
                       validator: (value) {
@@ -180,6 +206,62 @@ class _MemberFormState extends State<MemberForm> {
                   ),
                   const SizedBox(
                     height: 25,
+                  ),
+                  Container(
+                    child: const Text(
+                      'Seleccione la/s Área/s Educativa/s pertinentes',
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 25,
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 50,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              ...List.generate(
+                                  areaItems.length,
+                                  (index) => Center(
+                                        child: AreaItem(
+                                          areaItems: areaItems,
+                                          onSelected: (bool value) {
+                                            if (value) {
+                                              itemsSelected
+                                                  .add(areaItems[index]);
+                                            } else {
+                                              itemsSelected
+                                                  .remove(areaItems[index]);
+                                            }
+                                            setState(() {});
+                                          },
+                                          area: areaItems[index],
+                                        ),
+                                      ))
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 50,
+                          width: double.infinity,
+                          child: Wrap(
+                            spacing: 10.0,
+                            children: [
+                              ...List.generate(
+                                itemsSelected.length,
+                                (index) => SelectedItem(
+                                  title: itemsSelected[index].title,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
