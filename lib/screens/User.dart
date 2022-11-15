@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_visitas/screens/AddRegister.dart';
+import 'package:proyecto_visitas/screens/Historial.dart';
+import 'package:proyecto_visitas/screens/Profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});
@@ -9,18 +12,27 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
+  SharedPreferences? preferences;
+  static String email = "";
+
+  @override
+  void initState() {
+    super.initState();
+    loadPreferences();
+  }
+
+  loadPreferences() async {
+    preferences = await SharedPreferences.getInstance();
+    setState(() {
+      email = preferences!.getString("email")!;
+    });
+  }
+
   int index = 0;
   final screens = [
     const AddRegister(),
-    const Center(
-      child: Text(
-        'Historial',
-        style: TextStyle(
-          fontSize: 50,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    )
+    const Historial(),
+    const Profile(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -51,6 +63,11 @@ class _UserPageState extends State<UserPage> {
               icon: Icon(Icons.history),
               label: 'Historial de Visitas',
             ),
+            NavigationDestination(
+              selectedIcon: Icon(Icons.account_circle),
+              icon: Icon(Icons.account_circle_outlined),
+              label: 'Perfil',
+            )
           ],
         ),
       ),

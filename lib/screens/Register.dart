@@ -1,7 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
 import 'package:proyecto_visitas/controller/TextFieldController.dart';
 import 'package:proyecto_visitas/screens/User.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../controller/data_controller.dart';
 
@@ -14,7 +17,12 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   DataController dataController = DataController();
-  late String name, lastName, email;
+  late String primer_nombre,
+      segundo_nombre,
+      primer_apellido,
+      segundo_apellido,
+      email,
+      password;
   TextFieldController controller = TextFieldController();
   List<String> rolItems = [];
   List<String> areaItems = [];
@@ -68,9 +76,9 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
-                  //Name
+                  //Primer Nombre
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25),
                     child: TextFormField(
@@ -87,11 +95,11 @@ class _RegisterState extends State<Register> {
                             Radius.circular(10.0),
                           ),
                         ),
-                        labelText: 'Nombre',
+                        labelText: 'Primer Nombre',
                       ),
                       obscureText: false,
                       validator: (value) {
-                        name = value!;
+                        primer_nombre = value!;
                         return controller.validateName(value);
                       },
                     ),
@@ -99,7 +107,7 @@ class _RegisterState extends State<Register> {
                   const SizedBox(
                     height: 25,
                   ),
-                  //Last Name
+                  //Segundo Nombre
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25),
                     child: TextFormField(
@@ -116,11 +124,69 @@ class _RegisterState extends State<Register> {
                             Radius.circular(10.0),
                           ),
                         ),
-                        labelText: 'Apellido',
+                        labelText: 'Segundo Nombre',
                       ),
                       obscureText: false,
                       validator: (value) {
-                        lastName = value!;
+                        segundo_nombre = value!;
+                        return controller.validateName(value);
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  //Primer Apellido
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    child: TextFormField(
+                      keyboardType: TextInputType.text,
+                      controller: controller.nameController,
+                      onSaved: (value) {
+                        controller.name = value!;
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                        ),
+                        labelText: 'Primer Apellido',
+                      ),
+                      obscureText: false,
+                      validator: (value) {
+                        primer_apellido = value!;
+                        return controller.validateLastName(value);
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  //Segundo Apellido
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    child: TextFormField(
+                      keyboardType: TextInputType.text,
+                      controller: controller.nameController,
+                      onSaved: (value) {
+                        controller.name = value!;
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                        ),
+                        labelText: 'Seguro Apellido',
+                      ),
+                      obscureText: false,
+                      validator: (value) {
+                        segundo_apellido = value!;
                         return controller.validateLastName(value);
                       },
                     ),
@@ -157,6 +223,7 @@ class _RegisterState extends State<Register> {
                   const SizedBox(
                     height: 25,
                   ),
+                  //Password
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25),
                     child: TextFormField(
@@ -177,7 +244,8 @@ class _RegisterState extends State<Register> {
                       ),
                       obscureText: true,
                       validator: (value) {
-                        return controller.validatePassword(value!);
+                        password = value!;
+                        return controller.validatePassword(value);
                       },
                     ),
                   ),
@@ -190,12 +258,25 @@ class _RegisterState extends State<Register> {
                   ),
                   GestureDetector(
                     onTap: (() async {
+                      SharedPreferences preferences =
+                          await SharedPreferences.getInstance();
+                      preferences.setString("email", email);
                       if (controller.checkLogin(context)) {
                         dataController.tecnico_exist(
-                            name, lastName, email, context);
+                            primer_nombre, primer_apellido, email, context);
                         var res =
                             await dataController.user_exist(email, context);
                         if (res) {
+                          var rolId = await dataController.getRolId(value!);
+                          dataController.addUser(
+                            primer_nombre,
+                            segundo_nombre,
+                            primer_apellido,
+                            segundo_apellido,
+                            email,
+                            password,
+                            rolId,
+                          );
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => const UserPage(),
@@ -211,7 +292,7 @@ class _RegisterState extends State<Register> {
                       child: Container(
                         padding: const EdgeInsets.all(15),
                         decoration: BoxDecoration(
-                          color: Colors.greenAccent[400],
+                          color: const Color(0xff152534),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: const Center(
@@ -226,6 +307,9 @@ class _RegisterState extends State<Register> {
                         ),
                       ),
                     ),
+                  ),
+                  const SizedBox(
+                    height: 25,
                   ),
                 ],
               ),

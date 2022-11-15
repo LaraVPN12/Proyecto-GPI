@@ -1,41 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:postgres/postgres.dart';
-import 'package:proyecto_visitas/components/modal.dart';
-import 'package:proyecto_visitas/controller/data_controller.dart';
 import 'package:proyecto_visitas/model/Visita.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class AddRegister extends StatefulWidget {
-  const AddRegister({super.key});
+class Historial extends StatelessWidget {
+  const Historial({super.key});
 
   @override
-  State<AddRegister> createState() => _AddRegisterState();
+  Widget build(BuildContext context) {
+    return const HistorialCards();
+  }
 }
 
-class _AddRegisterState extends State<AddRegister> {
-  List<Visita> visitas = [];
-  SharedPreferences? preferences;
-  static String email = "";
-  DataController dataController = DataController();
+class HistorialCards extends StatefulWidget {
+  const HistorialCards({super.key});
 
+  @override
+  State<HistorialCards> createState() => _HistorialCardsState();
+}
+
+class _HistorialCardsState extends State<HistorialCards> {
+  List<Visita> visitas = [];
   @override
   void initState() {
     super.initState();
-    loadPreferences();
     getVisitas();
   }
 
   @override
   void setState(VoidCallback fn) {
     super.setState(fn);
-  }
-
-  loadPreferences() async {
-    preferences = await SharedPreferences.getInstance();
-    setState(() {
-      email = preferences!.getString("email")!;
-    });
   }
 
   Future getVisitas() async {
@@ -57,31 +51,11 @@ class _AddRegisterState extends State<AddRegister> {
     await connection.close();
   }
 
-  Modal dialog = Modal();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff152534),
-        title: const Text("Visitas del Mes"),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          dialog.openInputDialog(
-            context,
-            "Nueva Visita",
-            "Ingrese nombre del Centro Escolar",
-            email,
-            dataController,
-          );
-        },
-        focusElevation: 5,
-        backgroundColor: const Color(0xff55CADB),
-        child: const Icon(
-          Icons.add,
-          size: 25,
-          color: Colors.white,
-        ),
+        title: const Text("Historial de Visitas"),
       ),
       body: ListView.builder(
         itemCount: visitas.length,
