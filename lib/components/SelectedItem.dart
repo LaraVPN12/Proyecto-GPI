@@ -14,10 +14,11 @@ class SelectedItem extends StatelessWidget {
         title,
         textAlign: TextAlign.center,
         style: const TextStyle(
+          color: Color(0xff152534),
           fontWeight: FontWeight.bold,
         ),
       ),
-      backgroundColor: Colors.blue.shade100,
+      backgroundColor: Colors.amber[100],
       padding: const EdgeInsets.all(5),
     );
   }

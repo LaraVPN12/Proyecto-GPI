@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
+import 'package:proyecto_visitas/controller/data_controller.dart';
+import 'package:proyecto_visitas/screens/Admin.dart';
 import '../components/AreaItem.dart';
 import '../components/SelectedItem.dart';
 import '../controller/TextFieldController.dart';
@@ -15,6 +17,13 @@ class MemberForm extends StatefulWidget {
 class _MemberFormState extends State<MemberForm> {
   List<Area> areaItems = [];
   List<Area> itemsSelected = [];
+  TextFieldController controller = TextFieldController();
+  DataController dataController = DataController();
+  late String primer_nombre,
+      segundo_nombre,
+      primer_apellido,
+      segundo_apellido,
+      correo;
 
   Future getAreas() async {
     final connection = PostgreSQLConnection(
@@ -40,7 +49,6 @@ class _MemberFormState extends State<MemberForm> {
     getAreas();
   }
 
-  TextFieldController controller = TextFieldController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +73,7 @@ class _MemberFormState extends State<MemberForm> {
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   //Primer Nombre
                   Padding(
@@ -88,7 +96,8 @@ class _MemberFormState extends State<MemberForm> {
                       ),
                       obscureText: false,
                       validator: (value) {
-                        return controller.validateName(value!);
+                        primer_nombre = value!;
+                        return controller.validateName(value);
                       },
                     ),
                   ),
@@ -116,7 +125,8 @@ class _MemberFormState extends State<MemberForm> {
                       ),
                       obscureText: false,
                       validator: (value) {
-                        return controller.validateName(value!);
+                        segundo_nombre = value!;
+                        return controller.validateName(value);
                       },
                     ),
                   ),
@@ -144,7 +154,8 @@ class _MemberFormState extends State<MemberForm> {
                       ),
                       obscureText: false,
                       validator: (value) {
-                        return controller.validateLastName(value!);
+                        primer_apellido = value!;
+                        return controller.validateLastName(value);
                       },
                     ),
                   ),
@@ -172,7 +183,8 @@ class _MemberFormState extends State<MemberForm> {
                       ),
                       obscureText: false,
                       validator: (value) {
-                        return controller.validateLastName(value!);
+                        segundo_apellido = value!;
+                        return controller.validateLastName(value);
                       },
                     ),
                   ),
@@ -200,7 +212,8 @@ class _MemberFormState extends State<MemberForm> {
                       ),
                       obscureText: false,
                       validator: (value) {
-                        return controller.validateEmail(value!);
+                        correo = value!;
+                        return controller.validateEmail(value);
                       },
                     ),
                   ),
@@ -265,16 +278,31 @@ class _MemberFormState extends State<MemberForm> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      if (controller.checkLogin(context)) {}
+                      if (controller.checkLogin(context)) {
+                        dataController.addTecnico(
+                          primer_nombre,
+                          segundo_nombre,
+                          primer_apellido,
+                          segundo_apellido,
+                          correo,
+                        );
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context) => const AdminPage(),
+                          ),
+                          (route) => false,
+                        );
+                      }
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 25.0,
+                        vertical: 20,
                       ),
                       child: Container(
                         padding: const EdgeInsets.all(15),
                         decoration: BoxDecoration(
-                          color: Colors.greenAccent[400],
+                          color: const Color(0xff152534),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: const Center(

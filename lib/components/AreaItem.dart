@@ -39,15 +39,15 @@ class _AreaItemState extends State<AreaItem> {
           vertical: 5,
         ),
         decoration: BoxDecoration(
-          color: _isSelected ? null : Colors.grey.shade300,
+          color: _isSelected ? null : Colors.lightBlue[100],
           shape: BoxShape.rectangle,
           border: _isSelected
               ? Border.all(
                   width: 2.0,
-                  color: Colors.greenAccent.shade400,
+                  color: const Color(0xff55CADB),
                 )
               : null,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(15),
         ),
         child: Text(
           widget.area.title,
